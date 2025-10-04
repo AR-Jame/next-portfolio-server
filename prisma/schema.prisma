@@ -6,3 +6,35 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  picture   String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Blog      Blog[]
+}
+
+model Blog {
+  id         Int      @id @default(autoincrement())
+  title      String
+  content    String
+  isFeatured Boolean  @default(false)
+  viewCount  Int      @default(0)
+  slug       String   @unique
+  categories String[]
+  thumbnail  String?
+  authorId   Int
+  author     User     @relation(fields: [authorId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+enum Role {
+  USER
+  OWNER
+}
