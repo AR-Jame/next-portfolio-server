@@ -1,0 +1,21 @@
+import type { NextFunction, Request, Response } from "express";
+import jwt, { type JwtPayload } from 'jsonwebtoken'
+import AppError from "../errorHelper/AppError";
+
+export const checkAuth = (...authRoles: string[]) => (req: Request, res: Response, next: NextFunction) => {
+    // const accessToken = req.headers.authorization;
+    const accessToken = req.headers.authorization || req.cookies.accessToken;
+
+    if (!accessToken) {
+        throw new AppError(403, 'You get an 403 error')
+    }
+
+    const verifyToken = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET as string) as JwtPayload;
+    req.user = verifyToken
+
+    if (!authRoles.includes(verifyToken.role)) {
+        throw new AppError(401, "You get an 401 error")
+    }
+    next()
+
+}

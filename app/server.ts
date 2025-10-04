@@ -71,3 +71,8 @@ const handleProcessEvents = async () => {
         gracefulShutdown("unhandledRejection")
     })
 }
+
+
+
+// Start application
+startServer();
