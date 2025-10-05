@@ -15,13 +15,40 @@ const createBlog = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+const getAllBlogs = catchAsync(async (req: Request, res: Response) => {
+
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+
+    const data = await blogService.getAllBlogs(page, limit);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: 200,
+        message: "Blogs retrieved successfully",
+        data: data,
+    })
+})
+
+
+const getBlogById = catchAsync(async (req: Request, res: Response) => {
+
+    const id = req.params.id;
+
+    const data = await blogService.getBlogById(Number(id));
+
+    sendResponse(res, {
+        success: true,
+        statusCode: 200,
+        message: "Blog retrieved successfully",
+        data: data,
+    })
+})
+
 
 
 export const blogController = {
     createBlog,
-    // getAllPostByUser,
-    // getPostById,
-    // updatePostById,
-    // deletePost,
-    // getPostStat
+    getAllBlogs,
+    getBlogById,
 }
